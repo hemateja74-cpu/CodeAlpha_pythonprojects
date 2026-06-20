@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🤖 Rule-Based Chatbot (Dark Mode)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .chat-container {
+            width: 400px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-header {
+            background: #0078d7;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .chat-box {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .chat-box p {
+            margin: 8px 0;
+        }
+        .chat-box .user {
+            text-align: right;
+            color: #4fc3f7;
+            font-weight: bold;
+        }
+        .chat-box .bot {
+            text-align: left;
+            color: #e0e0e0;
+        }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #333;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            background: #2c2c2c;
+            color: #e0e0e0;
+        }
+        .chat-input button {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        .chat-input button:hover {
+            background: #005fa3;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">🤖 Rule-Based Chatbot</div>
+        <div class="chat-box" id="chatBox"></div>
+        <form class="chat-input" id="chatForm">
+            <input type="text" id="message" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("chatForm").onsubmit = async function(e) {
+            e.preventDefault();
+            let msg = document.getElementById("message").value;
+            let res = await fetch("/chat", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "message=" + encodeURIComponent(msg)
+            });
+            let data = await res.json();
+            document.getElementById("chatBox").innerHTML += "<p class='user'>You: " + msg + "</p>";
+            document.getElementById("chatBox").innerHTML += "<p class='bot'>Bot: " + data.reply + "</p>";
+            document.getElementById("message").value = "";
+            document.getElementById("chatBox").scrollTop = document.getElementById("chatBox").scrollHeight;
+        }
+    </script>
+</body>
+</html>
